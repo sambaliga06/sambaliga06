@@ -1,0 +1,156 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Consolas;}{\f1\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue255;\red0\green0\blue0;\red128\green128\blue128;\red255\green0\blue0;\red255\green0\blue255;}
+{\*\generator Riched20 10.0.22000}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\f0\fs19\lang9 CREATE\cf2  \cf1 DATABASE\cf2  order4nm21cs138\cf3 ;\cf2\par
+\cf1 use\cf2  order4nm21cs138\cf3 ;\cf2\par
+\cf1 create\cf2  \cf1 table\cf2  customer\cf3 (\cf2\par
+cust_no \cf1 int\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+c_name \cf1 varchar\cf3 (\cf2 50\cf3 ),\cf2\par
+c_city \cf1 varchar\cf3 (\cf2 50\cf3 ),\cf2\par
+\cf1 PRIMARY\cf2  \cf1 KEY \cf3 (\cf2 cust_no\cf3 )\cf2\par
+\cf3 );\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  customer \cf1 values \cf3 (\cf2 111\cf3 ,\cf4 'John Smith'\cf3 ,\cf2  \cf4 'Karkala'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  customer \cf1 values \cf3 (\cf2 112\cf3 ,\cf4 'Ramesh N'\cf3 ,\cf2  \cf4 'Nitte'\cf3 )\cf2\tab\tab\tab\par
+\cf1 insert\cf2  \cf1 into\cf2  customer \cf1 values \cf3 (\cf2 113\cf3 ,\cf4 'Franklin'\cf3 ,\cf2  \cf4 'Karkala'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  customer \cf1 values \cf3 (\cf2 114\cf3 ,\cf4 'Pratham'\cf3 ,\cf2  \cf4 'Kasaragod'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  customer \cf1 values \cf3 (\cf2 115\cf3 ,\cf4 'Raju'\cf3 ,\cf2  \cf4 'Udupi'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  customer \cf1 values \cf3 (\cf2 116\cf3 ,\cf4 'Alicia'\cf3 ,\cf4 'Mangalore'\cf3 )\cf2\par
+\par
+\cf1 CREATE\cf2  \cf1 TABLE\cf2  ordere\cf3 (\cf2\par
+order_no \cf1 int\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+odate \cf1 datetime\cf3 ,\cf2\par
+cust_no \cf1 int\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+order_amt \cf1 float\cf2  \cf3 ,\cf2\par
+\cf1 PRIMARY\cf2  \cf1 KEY \cf3 (\cf2 order_no\cf3 )\cf2  \cf3 ,\cf2\par
+\cf1 FOREIGN\cf2  \cf1 KEY \cf3 (\cf2 cust_no\cf3 )\cf2  \cf1 REFERENCES\cf2  customer\cf1  \cf3 (\cf2 cust_no\cf3 )\cf2  \cf1 ON\cf2  \cf1 DELETE\cf2  \cf1 CASCADE\cf2  \cf1 ON\cf2  \cf5 UPDATE\cf2  \cf1 CASCADE\cf2  \par
+\cf3 );\cf2\par
+\cf1 CREATE\cf2  \cf1 TABLE\cf2  items\cf3 (\cf2\par
+item_no \cf1 int\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+unit_price \cf1 float\cf3 ,\cf2\par
+\cf1 PRIMARY\cf2  \cf1 KEY \cf3 (\cf2 item_no\cf3 )\cf2\par
+\cf3 );\cf2\par
+\cf1 CREATE\cf2  \cf1 TABLE\cf2  order_item\cf3 (\cf2\par
+order_no \cf1 int\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+item_no \cf1 int\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+qty \cf1 int\cf3 ,\cf2\par
+\cf1 PRIMARY\cf2  \cf1 KEY \cf3 (\cf2 order_no\cf3 ,\cf2 item_no\cf3 ),\cf2\par
+\cf1 FOREIGN\cf2  \cf1 KEY \cf3 (\cf2 order_no\cf3 )\cf2  \cf1 REFERENCES\cf2  ordere\cf1  \cf3 (\cf2 order_no\cf3 )\cf2  \cf1 ON\cf2  \cf1 DELETE\cf2  \cf1 CASCADE\cf2  \cf1 ON\cf2  \cf5 UPDATE\cf2  \cf1 CASCADE\cf3 ,\cf2\par
+\cf1 FOREIGN\cf2  \cf1 KEY \cf3 (\cf2 item_no\cf3 )\cf2  \cf1 REFERENCES\cf2  items\cf1  \cf3 (\cf2 item_no\cf3 )\cf2  \cf1 ON\cf2  \cf1 DELETE\cf2  \cf1 CASCADE\cf2  \cf1 ON\cf2  \cf5 UPDATE\cf2  \cf1 CASCADE\cf2\par
+\cf3 );\cf2\par
+\cf1 CREATE\cf2  \cf1 TABLE\cf2  warehouse\cf3 (\cf2\par
+w_no \cf1 int\cf2  \cf3 ,\cf2\par
+w_city \cf1 varchar\cf3 (\cf2 50\cf3 ),\cf2\par
+\cf1 PRIMARY\cf2  \cf1 KEY \cf3 (\cf2 w_no\cf3 )\cf2\par
+\cf3 );\cf2\par
+\cf1 CREATE\cf2  \cf1 TABLE\cf2  shipment\cf3 (\cf2\par
+order_no \cf1 int\cf2  \cf3 NOT\cf2  \cf3 NULL,\cf2\par
+w_no \cf1 int\cf2  \cf3 ,\cf2\par
+ship_date \cf1 datetime\cf2  \cf3 ,\cf2\par
+\cf1 PRIMARY\cf2  \cf1 KEY \cf3 (\cf2 order_no\cf3 ,\cf2 w_no\cf3 )\cf2  \cf3 ,\cf2\par
+\cf1 FOREIGN\cf2  \cf1 KEY \cf3 (\cf2 order_no\cf3 )\cf2   \cf1 REFERENCES\cf2  ordere\cf1  \cf3 (\cf2 order_no\cf3 )\cf2  \cf1 ON\cf2  \cf1 DELETE\cf2  \cf1 CASCADE\cf2  \cf1 ON\cf2  \cf5 UPDATE\cf2  \cf1 CASCADE\cf3 ,\cf2\par
+\cf1 FOREIGN\cf2  \cf1 KEY \cf3 (\cf2 w_no\cf3 )\cf2  \cf1 REFERENCES\cf2  warehouse\cf1  \cf3 (\cf2 w_no\cf3 )\cf2  \cf1 ON\cf2  \cf1 DELETE\cf2  \cf1 CASCADE\cf2  \cf1 ON\cf2  \cf5 UPDATE\cf2  \cf1 CASCADE\cf2\par
+\cf3 );\cf2\par
+\par
+\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 201\cf3 ,\cf4 '2001-08-03'\cf3 ,\cf2  111\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 202\cf3 ,\cf4 '2002-08-03'\cf3 ,\cf2  111\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 203\cf3 ,\cf4 '2001-08-04'\cf3 ,\cf2  112\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 204\cf3 ,\cf4 '2004-02-01'\cf3 ,\cf2  113\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 205\cf3 ,\cf4 '2001-04-02'\cf3 ,\cf2  114\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 206\cf3 ,\cf4 '2005-02-01'\cf3 ,\cf2  115\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 207\cf3 ,\cf4 '2008-04-01'\cf3 ,\cf2  115\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 209\cf3 ,\cf4 '2008-02-01'\cf3 ,\cf2  114\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 208\cf3 ,\cf4 '2008-12-01'\cf3 ,\cf2  111\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 200\cf3 ,\cf4 '2008-11-01'\cf3 ,\cf2  111\cf3 ,\cf2  0\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  ordere \cf1 values \cf3 (\cf2 210\cf3 ,\cf4 '2008-10-01'\cf3 ,\cf2  111\cf3 ,\cf2  0\cf3 )\cf2\par
+\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  items \cf1 values \cf3 (\cf2 301\cf3 ,\cf2 2000\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  items \cf1 values \cf3 (\cf2 302\cf3 ,\cf2 2000\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  items \cf1 values \cf3 (\cf2 303\cf3 ,\cf2 1000\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  items \cf1 values \cf3 (\cf2 304\cf3 ,\cf2 5000\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  items \cf1 values \cf3 (\cf2 305\cf3 ,\cf2 4000\cf3 )\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 201\cf3 ,\cf2 301\cf3 ,\cf2 2\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 201\cf3 ,\cf2 302\cf3 ,\cf2 4\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 201\cf3 ,\cf2 303\cf3 ,\cf2 4\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 201\cf3 ,\cf2 304\cf3 ,\cf2 4\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 201\cf3 ,\cf2 305\cf3 ,\cf2 3\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 204\cf3 ,\cf2 302\cf3 ,\cf2 3\cf3 )\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 202\cf3 ,\cf2 303\cf3 ,\cf2 2\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 202\cf3 ,\cf2 305\cf3 ,\cf2 4\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 203\cf3 ,\cf2 302\cf3 ,\cf2 1\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 204\cf3 ,\cf2 305\cf3 ,\cf2 2\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 205\cf3 ,\cf2 301\cf3 ,\cf2 3\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 206\cf3 ,\cf2 301\cf3 ,\cf2 5\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  order_item \cf1 values \cf3 (\cf2 206\cf3 ,\cf2 302\cf3 ,\cf2 3\cf3 )\cf2\par
+\par
+\cf5 update\cf2  ordere \cf1 set\cf2  order_amt  \cf3 =\cf2\par
+\cf3 (\cf1 select\cf2  \cf5 sum\cf3 (\cf2 O\cf3 .\cf2 qty \cf3 *\cf2  I\cf3 .\cf2 unit_price\cf3 )\cf2  \cf1 from\cf2  order_item O\cf3 ,\cf2  items I\par
+                              \cf1 where\cf2  O\cf3 .\cf2 item_no \cf3 =\cf2  I\cf3 .\cf2 item_no \cf3 and\cf2  O\cf3 .\cf2 order_no \cf3 =\cf2  201\cf3 )\cf2\par
+\cf1 where\cf2  order_no \cf3 =\cf2  201\par
+\par
+\cf5 update\cf2  ordere \cf1 set\cf2  order_amt  \cf3 =\cf2\par
+\cf3 (\cf1 select\cf2  \cf5 sum\cf3 (\cf2 O\cf3 .\cf2 qty \cf3 *\cf2  I\cf3 .\cf2 unit_price\cf3 )\cf2  \cf1 from\cf2  order_item O\cf3 ,\cf2  items I\par
+                              \cf1 where\cf2  O\cf3 .\cf2 item_no \cf3 =\cf2  I\cf3 .\cf2 item_no \cf3 and\cf2  O\cf3 .\cf2 order_no \cf3 =\cf2  202\cf3 )\cf2\par
+\cf1 where\cf2  order_no \cf3 =\cf2  202\par
+\par
+\cf5 update\cf2  ordere \cf1 set\cf2  order_amt  \cf3 =\cf2\par
+\cf3 (\cf1 select\cf2  \cf5 sum\cf3 (\cf2 O\cf3 .\cf2 qty \cf3 *\cf2  I\cf3 .\cf2 unit_price\cf3 )\cf2  \cf1 from\cf2  order_item O\cf3 ,\cf2  items I\par
+                              \cf1 where\cf2  O\cf3 .\cf2 item_no \cf3 =\cf2  I\cf3 .\cf2 item_no \cf3 and\cf2  O\cf3 .\cf2 order_no \cf3 =\cf2  203\cf3 )\cf2\par
+\cf1 where\cf2  order_no \cf3 =\cf2  203\par
+\par
+\cf5 update\cf2  ordere \cf1 set\cf2  order_amt  \cf3 =\cf2\par
+\cf3 (\cf1 select\cf2  \cf5 sum\cf3 (\cf2 O\cf3 .\cf2 qty \cf3 *\cf2  I\cf3 .\cf2 unit_price\cf3 )\cf2  \cf1 from\cf2  order_item O\cf3 ,\cf2  items I\par
+                              \cf1 where\cf2  O\cf3 .\cf2 item_no \cf3 =\cf2  I\cf3 .\cf2 item_no \cf3 and\cf2  O\cf3 .\cf2 order_no \cf3 =\cf2  204\cf3 )\cf2\par
+\cf1 where\cf2  order_no \cf3 =\cf2  204\par
+\par
+\cf5 update\cf2  ordere \cf1 set\cf2  order_amt  \cf3 =\cf2\par
+\cf3 (\cf1 select\cf2  \cf5 sum\cf3 (\cf2 O\cf3 .\cf2 qty \cf3 *\cf2  I\cf3 .\cf2 unit_price\cf3 )\cf2  \cf1 from\cf2  order_item O\cf3 ,\cf2  items I\par
+                              \cf1 where\cf2  O\cf3 .\cf2 item_no \cf3 =\cf2  I\cf3 .\cf2 item_no \cf3 and\cf2  O\cf3 .\cf2 order_no \cf3 =\cf2  205\cf3 )\cf2\par
+\cf1 where\cf2  order_no \cf3 =\cf2  205\par
+\par
+\cf5 update\cf2  ordere \cf1 set\cf2  order_amt  \cf3 =\cf2\par
+\cf3 (\cf1 select\cf2  \cf5 sum\cf3 (\cf2 O\cf3 .\cf2 qty \cf3 *\cf2  I\cf3 .\cf2 unit_price\cf3 )\cf2  \cf1 from\cf2  order_item O\cf3 ,\cf2  items I\par
+                              \cf1 where\cf2  O\cf3 .\cf2 item_no \cf3 =\cf2  I\cf3 .\cf2 item_no \cf3 and\cf2  O\cf3 .\cf2 order_no \cf3 =\cf2  206\cf3 )\cf2\par
+\cf1 where\cf2  order_no \cf3 =\cf2  206\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  warehouse \cf1 values \cf3 (\cf2 1\cf3 ,\cf4 'MAGALORE'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  warehouse \cf1 values \cf3 (\cf2 2\cf3 ,\cf4 'MAGALORE'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  warehouse \cf1 values \cf3 (\cf2 3\cf3 ,\cf4 'MAGALORE'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  warehouse \cf1 values \cf3 (\cf2 4\cf3 ,\cf4 'UDUPI'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  warehouse \cf1 values \cf3 (\cf2 5\cf3 ,\cf4 'UDUPI'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  warehouse \cf1 values \cf3 (\cf2 6\cf3 ,\cf4 'KARKALA'\cf3 )\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 201\cf3 ,\cf2 1\cf3 ,\cf4 '2001-04-02'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 201\cf3 ,\cf2 2\cf3 ,\cf4 '2001-04-04'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 202\cf3 ,\cf2 1\cf3 ,\cf4 '2001-05-02'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 204\cf3 ,\cf2 3\cf3 ,\cf4 '2004-04-04'\cf3 )\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 202\cf3 ,\cf2 2\cf3 ,\cf4 '2002-05-12'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 202\cf3 ,\cf2 3\cf3 ,\cf4 '2003-06-01'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 202\cf3 ,\cf2 4\cf3 ,\cf4 '2003-06-01'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 203\cf3 ,\cf2 1\cf3 ,\cf4 '2004-02-01'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 203\cf3 ,\cf2 2\cf3 ,\cf4 '2004-02-01'\cf3 )\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 203\cf3 ,\cf2 3\cf3 ,\cf4 '2004-02-01'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 204\cf3 ,\cf2 4\cf3 ,\cf4 '2004-06-02'\cf3 )\cf2\par
+\cf1 insert\cf2  \cf1 into\cf2  shipment \cf1 values \cf3 (\cf2 204\cf3 ,\cf2 2\cf3 ,\cf4 '2004-06-02'\cf3 )\cf2\par
+\par
+\cf1 select\cf2  C\cf3 .\cf2 c_name\cf3 ,\cf2  \cf5 count\cf3 (\cf2 O\cf3 .\cf2 order_no\cf3 )\cf2  \cf1 as\cf2  NO_OF_ORDR\cf3 ,\cf2  \cf5 avg\cf3 (\cf2 O\cf3 .\cf2 order_amt\cf3 )\cf2  \cf1 as\cf2  AVG_ORD_AMT \cf1 from\cf2  CUSTOMER C\cf3 ,\cf2 ordere O\par
+\cf1 where\cf2  C\cf3 .\cf2 cust_no \cf3 =\cf2  O\cf3 .\cf2 cust_no \cf1 group\cf2   \cf1 by\cf2  C\cf3 .\cf2 c_name\par
+\par
+\cf1 select\cf2   item_no\cf3 ,\cf5 count\cf3 (*),\cf5 sum\cf3 (\cf2 qty\cf3 )\cf2    \cf1 from\cf2   order_item \cf1 where\cf2  order_no \cf3 in\cf2\par
+\cf1    \cf3 (\cf1 select\cf2  order_no \cf1 from\cf2  shipment \cf1 group\cf2  \cf1 by\cf2  order_no \cf1 having\cf2  \cf5 count\cf3 (*)\cf2  \cf3 >=\cf2 2\cf3 )\cf2  \cf1 group\cf2  \cf1 by\cf2    item_no  \cf1 having\cf2  \cf5 count\cf3 (*)\cf2  \cf3 >\cf2  \cf3 =\cf2 2\par
+\par
+\cf1 select\cf2  C\cf3 .\cf2 c_name  \cf1 from\cf2  CUSTOMER C \cf1 where\cf2  \cf3 NOT\cf2  \cf3 EXISTS\cf2  \par
+\cf3 (\cf2\par
+\cf3 (\cf1 select\cf2  item_no \cf1 from\cf2  items\cf3 )\cf2\par
+\cf1 EXCEPT\cf2\par
+\cf3 (\cf1 select\cf2  \cf1 distinct\cf3 (\cf2 OI\cf3 .\cf2 item_no\cf3 )\cf2  \cf1 from\cf2  ordere O\cf3 ,\cf2 order_item OI \cf1 where\cf2   O\cf3 .\cf2 order_no \cf3 =\cf2  O\cf3 .\cf2 order_no \cf3 and\cf2   O\cf3 .\cf2 cust_no \cf3 =\cf2  C\cf3 .\cf2 cust_no \cf3 )\cf2\par
+\cf3 )\cf2\par
+\cf0\f1\fs22\par
+}
+ 
