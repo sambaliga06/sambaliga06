@@ -1,0 +1,119 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil Consolas;}{\f1\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue255;\red0\green0\blue0;\red128\green128\blue128;\red255\green0\blue255;\red255\green0\blue0;}
+{\*\generator Riched20 10.0.22000}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\f0\fs19\lang9 create\cf2  \cf1 database\cf2  bookadoptcs138\cf3 ;\cf2\par
+\cf1 use\cf2  bookadoptcs138\cf3 ;\cf2\par
+\par
+\cf1 create\cf2  \cf1 table\cf2  student\cf3 (\cf2\par
+regno \cf1 varchar\cf3 (\cf2 15\cf3 )\cf2  \cf3 ,\cf2\par
+S_name \cf1 varchar\cf3 (\cf2 50\cf3 )\cf2  \cf3 ,\cf2\par
+major \cf1 varchar\cf3 (\cf2 10\cf3 ),\cf2\par
+bdate \cf1 date\cf2  \cf3 ,\cf2\par
+\cf1 primary\cf2  \cf1 key\cf3 (\cf2 regno\cf3 )\cf2\par
+\cf3 );\cf2\par
+\par
+\cf1 create\cf2  \cf1 table\cf2  course\cf3 (\cf2\par
+courseno \cf1 int\cf3 ,\cf2\par
+cname \cf1 varchar\cf3 (\cf2 50\cf3 ),\cf2\par
+dept \cf1 varchar\cf3 (\cf2 10\cf3 ),\cf2\par
+\cf1 primary\cf2  \cf1 key\cf3 (\cf2 courseno\cf3 )\cf2\par
+\par
+\cf3 );\cf2\par
+\par
+\cf1 create\cf2  \cf1 table\cf2  enroll\cf1  \cf3 (\cf2\par
+regno \cf1 varchar\cf3 (\cf2 15\cf3 ),\cf2\par
+courseno \cf1 int\cf3 ,\cf2\par
+sem \cf1 int\cf3 ,\cf2\par
+marks \cf1 int\cf2  \cf3 ,\cf2\par
+\cf1 primary\cf2  \cf1 key \cf3 (\cf2 regno\cf3 ,\cf2 courseno\cf3 ,\cf2 sem\cf3 ),\cf2\par
+\cf1 foreign\cf2  \cf1 key\cf3 (\cf2 regno\cf3 )\cf2  \cf1 references\cf2  student\cf3 (\cf2 regno\cf3 )\cf1 on\cf2  \cf1 delete\cf2\par
+\cf1 cascade\cf2  \cf1 on\cf2  \cf4 update\cf2  \cf1 cascade\cf3 ,\cf2\par
+\cf1 foreign\cf2  \cf1 key\cf3 (\cf2 courseno\cf3 )\cf2  \cf1 references\cf2  course\cf3 (\cf2 courseno\cf3 )\cf1 on\cf2  \cf1 delete\cf2\par
+\cf1 cascade\cf2  \cf1 on\cf2  \cf4 update\cf2  \cf1 cascade\cf3 ,\cf2\par
+\cf3 );\cf2\par
+\par
+\par
+\cf1 create\cf2  \cf1 table\cf2  textbook\cf1  \cf3 (\cf2\par
+bookisbn \cf1 int\cf2  \cf3 ,\cf2\par
+title \cf1 varchar\cf3 (\cf2 50\cf3 ),\cf2\par
+publisher \cf1 varchar\cf3 (\cf2 20\cf3 ),\cf2\par
+author \cf1 varchar\cf3 (\cf2 20\cf3 ),\cf2\par
+\cf1 primary\cf2  \cf1 key \cf3 (\cf2 bookisbn\cf3 )\cf2\par
+\par
+\cf3 );\cf2\par
+\par
+\cf1 create\cf2  \cf1 table\cf2  bookAdoption\cf1  \cf3 (\cf2\par
+courseno \cf1 int\cf3 ,\cf2\par
+sem \cf1 int\cf3 ,\cf2\par
+bookisbn \cf1 int\cf3 ,\cf2\par
+\par
+\cf1 primary\cf2  \cf1 key\cf3 (\cf2 courseno\cf3 ,\cf2 sem\cf3 ,\cf2 bookisbn\cf3 ),\cf2\par
+\cf1 foreign\cf2  \cf1 key\cf3 (\cf2 courseno\cf3 )\cf2  \cf1 references\cf2  course\cf3 (\cf2 courseno\cf3 )\cf1 on\cf2  \cf1 delete\cf2\par
+\cf1 cascade\cf2  \cf1 on\cf2  \cf4 update\cf2  \cf1 cascade\cf3 ,\cf2\par
+\cf1 foreign\cf2  \cf1 key\cf3 (\cf2 bookisbn\cf3 )\cf2  \cf1 references\cf2  textbook\cf3 (\cf2 bookisbn\cf3 )\cf1 on\cf2  \cf1 delete\cf2\par
+\cf1 cascade\cf2  \cf1 on\cf2  \cf4 update\cf2  \cf1 cascade\cf3 ,\cf2\par
+\cf3 );\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  student \cf1 values\cf3 (\cf5 '111'\cf3 ,\cf5 'speed'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '1989-11-09'\cf3 )\cf2\par
+\cf3 ,(\cf5 '112'\cf3 ,\cf5 'messi'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '1979-07-04'\cf3 )\cf2\par
+\cf3 ,(\cf5 '113'\cf3 ,\cf5 'ronaldo'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '1979-01-06'\cf3 )\cf2\par
+\cf3 ,(\cf5 '114'\cf3 ,\cf5 'kaka'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '1999-10-02'\cf3 )\cf2\par
+\cf3 ,(\cf5 '115'\cf3 ,\cf5 'shankar'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '1988-11-04'\cf3 )\cf2\par
+\cf3 ,(\cf5 '116'\cf3 ,\cf5 'ksi'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '2000-10-09'\cf3 )\cf2\par
+\cf3 ,(\cf5 '117'\cf3 ,\cf5 'tommy'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '1988-1-29'\cf3 )\cf2\par
+\cf3 ,(\cf5 '118'\cf3 ,\cf5 'pepe'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '1997-5-02'\cf3 )\cf2\par
+\cf3 ,(\cf5 '119'\cf3 ,\cf5 'tate'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '1997-5-02'\cf3 )\cf2\par
+\cf3 ,(\cf5 '120'\cf3 ,\cf5 'snehal'\cf3 ,\cf5 'academic'\cf3 ,\cf5 '2003-12-28'\cf3 );\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  course \cf1 values\cf3 (\cf2 1\cf3 ,\cf5 'DBMS'\cf3 ,\cf5 'CS'\cf3 )\cf2\par
+\cf3 ,(\cf2 2\cf3 ,\cf5 'COMPILER'\cf3 ,\cf5 'CS'\cf3 )\cf2\par
+\cf3 ,(\cf2 3\cf3 ,\cf5 'SIG PROCESSING'\cf3 ,\cf5 'ECE'\cf3 )\cf2\par
+\cf3 ,(\cf2 4\cf3 ,\cf5 'DIGITAL SIGNAL'\cf3 ,\cf5 'EEE'\cf3 )\cf2\par
+\cf3 ,(\cf2 5\cf3 ,\cf5 'MACHINE LEARNING'\cf3 ,\cf5 'CS'\cf3 )\cf2\par
+\cf3 ,(\cf2 6\cf3 ,\cf5 'AUTOCAD'\cf3 ,\cf5 'MECH'\cf3 )\cf2\par
+\cf3 ,(\cf2 7\cf3 ,\cf5 'THERMODYNAM'\cf3 ,\cf5 'MECH'\cf3 )\cf2\par
+\cf3 ,(\cf2 8\cf3 ,\cf5 'CONSTRUCTION'\cf3 ,\cf5 'CIVIL'\cf3 );\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  textbook \cf1 values \cf3 (\cf2 201\cf3 ,\cf5 'Fundamentals of DBMS'\cf3 ,\cf5 'McGraw'\cf3 ,\cf5 'NAVATHE'\cf3 )\cf2\par
+\cf3 ,(\cf2 202\cf3 ,\cf5 'Database Design'\cf3 ,\cf5 'McGraw'\cf3 ,\cf5 'Raghu Rama'\cf3 )\cf2\par
+\cf3 ,(\cf2 203\cf3 ,\cf5 'Compiler design'\cf3 ,\cf5 'Pearson'\cf3 ,\cf5 'Ulman'\cf3 )\cf2\par
+\cf3 ,(\cf2 204\cf3 ,\cf5 'JAVA completeReference'\cf3 ,\cf5 'McGraw'\cf3 ,\cf5 'BALAGURU'\cf3 )\cf2\par
+\cf3 ,(\cf2 205\cf3 ,\cf5 'Singals andFundumentals'\cf3 ,\cf5 'McGraw'\cf3 ,\cf5 'NITHIN'\cf3 )\cf2\par
+\cf3 ,(\cf2 206\cf3 ,\cf5 'Machine Theory'\cf3 ,\cf5 'McGraw'\cf3 ,\cf5 'Ragavan'\cf3 ),(\cf2 207\cf3 ,\cf5 'Circuit design'\cf3 ,\cf5 'McGraw'\cf3 ,\cf5 'Rajkamal'\cf3 )\cf2\par
+\cf3 ,(\cf2 208\cf3 ,\cf5 'Logic design'\cf3 ,\cf5 'surma'\cf3 ,\cf5 'Rajkamal'\cf3 )\cf2\par
+\cf3 ,(\cf2 209\cf3 ,\cf5 'Electronic Circuits'\cf3 ,\cf5 'McGraw'\cf3 ,\cf5 'Alfred'\cf3 ),(\cf2 210\cf3 ,\cf5 'Circuits Theory'\cf3 ,\cf5 'McGraw'\cf3 ,\cf5 'Alfred'\cf3 );\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  bookAdoption \cf1 values \cf3 (\cf2 1\cf3 ,\cf2 5\cf3 ,\cf2 201\cf3 ),(\cf2 1\cf3 ,\cf2 7\cf3 ,\cf2 202\cf3 ),(\cf2 2\cf3 ,\cf2 7\cf3 ,\cf2 203\cf3 ),(\cf2 3\cf3 ,\cf2 7\cf3 ,\cf2 204\cf3 ),(\cf2 4\cf3 ,\cf2 3\cf3 ,\cf2 205\cf3 ),(\cf2 4\cf3 ,\cf2 5\cf3 ,\cf2 209\cf3 ),(\cf2 4\cf3 ,\cf2 7\cf3 ,\cf2 208\cf3 ),(\cf2 5\cf3 ,\cf2 5\cf3 ,\cf2 205\cf3 ),(\cf2 5\cf3 ,\cf2 6\cf3 ,\cf2 208\cf3 )\cf2\par
+\cf3 ,(\cf2 6\cf3 ,\cf2 7\cf3 ,\cf2 203\cf3 ),(\cf2 7\cf3 ,\cf2 3\cf3 ,\cf2 207\cf3 ),(\cf2 7\cf3 ,\cf2 4\cf3 ,\cf2 206\cf3 ),(\cf2 7\cf3 ,\cf2 5\cf3 ,\cf2 202\cf3 ),(\cf2 8\cf3 ,\cf2 3\cf3 ,\cf2 207\cf3 ),(\cf2 8\cf3 ,\cf2 4\cf3 ,\cf2 208\cf3 );\cf2\par
+\par
+\cf1 insert\cf2  \cf1 into\cf2  enroll \cf1 values \cf3 (\cf2 111\cf3 ,\cf2 1\cf3 ,\cf2 5\cf3 ,\cf2 59\cf3 )\cf2\par
+\cf3 ,(\cf2 111\cf3 ,\cf2 2\cf3 ,\cf2 5\cf3 ,\cf2 70\cf3 )\cf2\par
+\cf3 ,(\cf2 111\cf3 ,\cf2 3\cf3 ,\cf2 5\cf3 ,\cf2 75\cf3 )\cf2\par
+\cf3 ,(\cf2 112\cf3 ,\cf2 1\cf3 ,\cf2 5\cf3 ,\cf2 49\cf3 ),\cf2\par
+\cf3 (\cf2 112\cf3 ,\cf2 1\cf3 ,\cf2 7\cf3 ,\cf2 69\cf3 )\cf2\par
+\cf3 ,(\cf2 113\cf3 ,\cf2 2\cf3 ,\cf2 5\cf3 ,\cf2 80\cf3 )\cf2\par
+\cf3 ,(\cf2 114\cf3 ,\cf2 3\cf3 ,\cf2 7\cf3 ,\cf2 79\cf3 )\cf2\par
+\cf3 ,(\cf2 115\cf3 ,\cf2 4\cf3 ,\cf2 3\cf3 ,\cf2 79\cf3 );\cf2\par
+\par
+\par
+\cf1 select\cf2  \cf3 *\cf2  \cf1 from\cf2  student\cf3 ;\cf2\par
+\cf1 select\cf2  \cf3 *\cf2  \cf1 from\cf2  textbook\cf3 ;\cf2\par
+\cf1 select\cf2  \cf3 *\cf2  \cf1 from\cf2  course\cf3 ;\cf2\par
+\cf1 select\cf2  \cf3 *\cf2  \cf1 from\cf2  enroll\cf3 ;\cf2\par
+\cf1 select\cf2  \cf3 *\cf2  \cf1 from\cf2  bookAdoption\cf3 ;\cf2\par
+\par
+\cf1 select\cf2  \cf1 distinct\cf3 (\cf2 T\cf3 .\cf2 bookisbn\cf3 ),\cf2  T\cf3 .\cf2 title \cf1 from\cf2  textbook T\cf3 ,\cf2  course C \cf3 ,\cf2  bookAdoption B \par
+\cf1 where\cf2  B\cf3 .\cf2 bookisbn\cf3 =\cf2 T\cf3 .\cf2 bookisbn \cf3 and\cf2  C\cf3 .\cf2 courseno \cf3 =\cf2  B\cf3 .\cf2 courseno \cf3 and\cf2  C\cf3 .\cf2 dept\cf3 =\cf5 'CS'\cf2  \cf3 and\cf2  C\cf3 .\cf2 courseno \cf3 IN\cf1  \cf3 (\cf2\par
+\cf1 SELECT\cf2  courseno \cf1 FROM\cf2  bookAdoption \cf1 group\cf2  \cf1 by\cf2  courseno \cf1 having\cf2  \cf4 count\cf3 (\cf1 DISTINCT\cf3 (\cf2 bookisbn\cf3 ))>=\cf2 2\par
+\cf3 )\cf2  \cf1 order\cf2  \cf1 by\cf2  T\cf3 .\cf2 title \par
+\par
+\cf1 select\cf2  \cf1 distinct\cf3 (\cf2 C\cf3 .\cf2 dept\cf3 )\cf2  \cf1 from\cf2  COURSE C \cf1 where\cf2   \par
+\cf3 NOT\cf2  \cf3 EXISTS(\cf2\par
+\cf3 (\cf2  \cf1 select\cf2  bookisbn \cf1 from\cf2  bookAdoption \cf1 where\cf2  courseno \cf3 in\cf1  \cf3 (\cf1 select\cf2  courseno \cf1 from\cf2  course \cf1 where\cf2  dept \cf3 =\cf2  C\cf3 .\cf2 dept \cf3 ))\cf2\par
+\tab\cf1 EXCEPT\cf2\par
+\cf1\tab\cf3 (\cf2  \cf1 select\cf2  bookisbn \cf1 from\cf2  textbook \cf1 where\cf2  publisher\cf3 =\cf5 'McGraw'\cf3 ))\cf2\par
+\par
+\cf1 select\cf2  \cf1 distinct\cf2  T\cf3 .\cf2 bookisbn \cf3 ,\cf2  T\cf3 .\cf2 title \cf1 from\cf2  textbook T\cf3 ,\cf2 bookAdoption BA\cf3 ,\cf2  course C \cf1 where\cf2  T\cf3 .\cf2 bookisbn \cf3 =\cf2  BA\cf3 .\cf2 bookisbn \cf3 and\cf2  C\cf3 .\cf2 courseno \cf3 =\cf2  BA\cf3 .\cf2 courseno \cf3 and\cf2  C\cf3 .\cf2 dept \cf3 in(\cf1 select\cf2  C\cf3 .\cf2 dept \cf1 from\cf2  course C\cf3 ,\cf2 enroll E \par
+\cf1 where\cf2  C\cf3 .\cf2 courseno \cf3 =\cf2  E\cf3 .\cf2 courseno \cf1 group\cf2  \cf1 by\cf2  C\cf3 .\cf2 dept \cf1 having\cf2  \cf4 count\cf3 (*)>=all(\cf1 select\cf2  \cf4 count\cf3 (*)\cf2  \cf1 from\cf2  course C\cf3 ,\cf2 enroll E \cf1 where\cf2  C\cf3 .\cf2 courseno \cf3 =\cf2  E\cf3 .\cf2 courseno \cf1 group\cf2  \cf1 by\cf2  C\cf3 .\cf2 dept\cf3 ))\cf0\f1\fs22\par
+}
+ 
