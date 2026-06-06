@@ -1,0 +1,152 @@
+import pygame
+import sys
+import random
+
+# --- Configuration ---
+GRID_SIZE = 20 
+COLS, ROWS = 30, 25 # 35x25 Grid
+HEADER, FOOTER = 60, 60
+WIDTH = COLS * GRID_SIZE
+HEIGHT = (ROWS * GRID_SIZE) + HEADER + FOOTER
+FPS = 30 # Locked 30 FPS
+
+# --- Sci-Fi Tones ---
+COLOR_BG = (10, 10, 10)         # Deep space background
+COLOR_GRID = (25, 25, 25)       # Tactical Grid lines
+COLOR_WALL = (15, 15, 15)       # Unvisited cells (Darker)
+COLOR_MAZE = (60, 60, 60)       # Confirmed Maze Paths (Muted Blue/Grey)
+COLOR_WALK = (0, 255, 255)      # Active Random Walk (Cyan)
+COLOR_HEAD = (255, 50, 50)      # Current Walker Position (Red)
+COLOR_TEXT = (200, 200, 200)
+COLOR_SUCCESS = (0, 255, 127)   # Matrix Green
+
+class WilsonGenerator:
+    def __init__(self, cols, rows):
+        self.cols = cols
+        self.rows = rows
+        self.grid = [[1 for _ in range(cols)] for _ in range(rows)]
+        self.cells = [(c, r) for r in range(0, rows, 2) for c in range(0, cols, 2)]
+        
+        start_cell = random.choice(self.cells)
+        self.in_maze = {start_cell}
+        self.grid[start_cell[1]][start_cell[0]] = 0
+        
+        self.current_walk = []
+        self.walker = None
+        self.complete = False
+        self.status_msg = "INITIALIZING BLUEPRINT MATRIX..."
+
+    def step(self):
+        if self.complete: return
+
+        unvisited = [c for c in self.cells if c not in self.in_maze]
+        if not unvisited:
+            self.complete = True
+            self.status_msg = "🌟 PERFECT MAZE COMPILED 🌟"
+            return
+
+        if not self.current_walk:
+            start_node = random.choice(unvisited)
+            self.current_walk = [start_node]
+            self.walker = start_node
+            self.status_msg = "SEARCHING FOR NODE INTERSECTION..."
+            return
+
+        dirs = [(0, 2), (0, -2), (2, 0), (-2, 0)]
+        random.shuffle(dirs)
+        
+        for dx, dy in dirs:
+            nx, ny = self.walker[0] + dx, self.walker[1] + dy
+            if 0 <= nx < self.cols and 0 <= ny < self.rows:
+                next_cell = (nx, ny)
+                
+                if next_cell in self.current_walk:
+                    idx = self.current_walk.index(next_cell)
+                    self.current_walk = self.current_walk[:idx + 1]
+                    self.walker = next_cell
+                    self.status_msg = "⚠️ LOOP DETECTED! PURGING PATH SECTIONS..."
+                    return
+                
+                self.current_walk.append(next_cell)
+                self.walker = next_cell
+                
+                if next_cell in self.in_maze:
+                    self.status_msg = "🤝 STRUCTURAL SYNC FOUND! CARVING..."
+                    for i in range(len(self.current_walk) - 1):
+                        c1 = self.current_walk[i]
+                        c2 = self.current_walk[i+1]
+                        
+                        self.in_maze.add(c1)
+                        self.grid[c1[1]][c1[0]] = 0
+                        self.grid[c2[1]][c2[0]] = 0
+                        self.grid[(c1[1]+c2[1])//2][(c1[0]+c2[0])//2] = 0
+                        
+                    self.current_walk = []
+                    self.walker = None
+                return
+
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Wilson's Algorithm Vector Visualization")
+    clock = pygame.time.Clock()
+    f_m = pygame.font.SysFont("Consolas", 16, bold=True)
+
+    generator = WilsonGenerator(COLS, ROWS)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: pygame.quit(); sys.exit()
+
+        generator.step()
+        screen.fill(COLOR_BG)
+
+        # --- 1. DRAW BACKGROUND TACTICAL GRID ---
+        for x in range(0, WIDTH, GRID_SIZE):
+            pygame.draw.line(screen, COLOR_GRID, (x, HEADER), (x, HEIGHT - FOOTER))
+        for y in range(HEADER, HEIGHT - FOOTER + 1, GRID_SIZE):
+            pygame.draw.line(screen, COLOR_GRID, (0, y), (WIDTH, y))
+
+        # --- 2. DRAW THE ACTIVE BLOCKS ---
+        for r in range(ROWS):
+            for c in range(COLS):
+                tile = generator.grid[r][c]
+                color = None # None means it stays pure background grid
+                
+                if tile == 1:
+                    color = COLOR_WALL
+                else:
+                    color = COLOR_MAZE
+                
+                # Active Walk override
+                if generator.current_walk:
+                    for i in range(len(generator.current_walk) - 1):
+                        c1 = generator.current_walk[i]
+                        c2 = generator.current_walk[i+1]
+                        mid = ((c1[0]+c2[0])//2, (c1[1]+c2[1])//2)
+                        if (c, r) == c1 or (c, r) == mid:
+                            color = COLOR_WALK
+                    if (c, r) == generator.current_walk[-1]:
+                        color = COLOR_WALK
+
+                # Explorer Head override
+                if generator.walker and (c, r) == generator.walker:
+                    color = COLOR_HEAD
+
+                # Draw slightly inside the grid cells to preserve the thin 1px grid line boundary
+                if color:
+                    pygame.draw.rect(screen, color, (c*GRID_SIZE + 1, HEADER + r*GRID_SIZE + 1, GRID_SIZE - 1, GRID_SIZE - 1))
+
+        # --- 3. RENDERING INTERFACE ---
+        title_color = COLOR_SUCCESS if generator.complete else COLOR_WALK
+        title = f_m.render(generator.status_msg, True, title_color)
+        screen.blit(title, (15, 20))
+
+        count_txt = f_m.render(f"SYNCHRONIZED NODES: {len(generator.in_maze)} / {len(generator.cells)}", True, COLOR_TEXT)
+        screen.blit(count_txt, (15, HEIGHT - 40))
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+if __name__ == "__main__":
+    main()

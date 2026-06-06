@@ -1,0 +1,185 @@
+import pygame
+import sys
+import random
+import traceback
+
+# --- Configuration ---
+GRID_SIZE = 14 
+COLS, ROWS = 35, 25
+MARGIN = 40
+HEADER, FOOTER = 60, 60
+WIDTH = (COLS * GRID_SIZE) * 2 + MARGIN
+HEIGHT = (ROWS * GRID_SIZE) + HEADER + FOOTER
+FPS = 30 
+
+# --- Sci-Fi Colors ---
+COLOR_BG = (10, 10, 10)
+COLOR_GRID = (25, 25, 25)
+COLOR_WALL = (15, 15, 15)       
+COLOR_MAZE = (60, 60, 60)       
+COLOR_ACTIVE = (0, 255, 255)     
+COLOR_TEXT = (200, 200, 200)
+COLOR_SUCCESS = (0, 255, 127)
+
+# --- 1. OPTIMIZED PRIM'S GENERATOR ---
+class PrimGenerator:
+    def __init__(self, cols, rows):
+        self.cols, self.rows = cols, rows
+        self.grid = [[1 for _ in range(cols)] for _ in range(rows)]
+        self.visited = set()
+        self.frontier = []
+        self.complete = False
+        
+        start = (0, 0)
+        self.visited.add(start)
+        self.grid[0][0] = 0
+        self.add_frontier(start)
+
+    def add_frontier(self, cell):
+        x, y = cell
+        for dx, dy in [(0, 2), (0, -2), (2, 0), (-2, 0)]:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < self.cols and 0 <= ny < self.rows and (nx, ny) not in self.visited:
+                self.frontier.append(((nx, ny), (x + dx//2, y + dy//2)))
+
+    def step(self):
+        if self.complete: return
+        
+        # Loop until a genuinely unvisited node is found and carved
+        while self.frontier:
+            edge = random.choice(self.frontier)
+            self.frontier.remove(edge)
+            next_cell, wall_cell = edge
+
+            if next_cell not in self.visited:
+                self.visited.add(next_cell)
+                self.grid[next_cell[1]][next_cell[0]] = 0
+                self.grid[wall_cell[1]][wall_cell[0]] = 0 
+                self.add_frontier(next_cell)
+                return # Yield frame immediately after a successful carve
+
+        self.complete = True
+
+# --- 2. FAST KRUSKAL'S GENERATOR (GUARANTEED CARVE) ---
+class KruskalGenerator:
+    def __init__(self, cols, rows):
+        self.cols, self.rows = cols, rows
+        self.grid = [[1 for _ in range(cols)] for _ in range(rows)]
+        self.complete = False
+        
+        self.parent = {}
+        for r in range(0, rows, 2):
+            for c in range(0, cols, 2):
+                self.grid[r][c] = 0 
+                self.parent[(c, r)] = (c, r)
+
+        self.walls = []
+        for r in range(0, rows, 2):
+            for c in range(0, cols, 2):
+                if c + 2 < cols: self.walls.append(((c, r), (c + 2, r), (c + 1, r)))
+                if r + 2 < rows: self.walls.append(((c, r), (c, r + 2), (c, r + 1)))
+        random.shuffle(self.walls)
+
+    def find(self, cell):
+        if self.parent[cell] == cell: return cell
+        self.parent[cell] = self.find(self.parent[cell]) 
+        return self.parent[cell]
+
+    def union(self, cell1, cell2):
+        root1 = self.find(cell1)
+        root2 = self.find(cell2)
+        if root1 != root2:
+            self.parent[root1] = root2
+            return True
+        return False
+
+    def step(self):
+        if self.complete: return
+
+        # Loop internally to burning through useless walls instantly,
+        # only stopping the frame when an actual corridor is broken open!
+        while self.walls:
+            cell1, cell2, wall = self.walls.pop()
+            if self.union(cell1, cell2):
+                self.grid[wall[1]][wall[0]] = 0 
+                self.last_carved = wall
+                return # Successful visual update achieved!
+
+        self.complete = True
+
+# --- 3. SCENE RENDERING ---
+def draw_scene(screen, grid, ox, f_m, title, complete, active_list=None, single_active=None):
+    lbl = f_m.render(title, True, COLOR_SUCCESS if complete else COLOR_ACTIVE)
+    screen.blit(lbl, (ox + 5, 20))
+
+    for x in range(0, COLS * GRID_SIZE, GRID_SIZE):
+        pygame.draw.line(screen, COLOR_GRID, (ox + x, HEADER), (ox + x, HEIGHT - FOOTER))
+    for y in range(HEADER, HEIGHT - FOOTER + 1, GRID_SIZE):
+        pygame.draw.line(screen, COLOR_GRID, (ox, y), (ox + COLS * GRID_SIZE, y))
+
+    for r in range(ROWS):
+        for c in range(COLS):
+            tile = grid[r][c]
+            col = COLOR_WALL if tile == 1 else COLOR_MAZE
+            
+            if active_list and (c, r) in active_list:
+                col = COLOR_ACTIVE
+            if single_active and (c, r) == single_active:
+                col = COLOR_ACTIVE
+
+            pygame.draw.rect(screen, col, (ox + c*GRID_SIZE + 1, HEADER + r*GRID_SIZE + 1, GRID_SIZE - 1, GRID_SIZE - 1))
+
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Maze Generation Face-Off: Hyper Kruskal Mode")
+    clock = pygame.time.Clock()
+    f_m = pygame.font.SysFont("monospace", 14, bold=True)
+
+    prim = PrimGenerator(COLS, ROWS)
+    kruskal = KruskalGenerator(COLS, ROWS)
+
+    t0 = pygame.time.get_ticks()
+    crash_error = None
+
+    while True:
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT: 
+                pygame.quit()
+                sys.exit()
+
+        screen.fill(COLOR_BG)
+
+        if not crash_error:
+            try:
+                if pygame.time.get_ticks() - t0 > 1500:
+                    if not prim.complete:
+                        prim.step() # Prim makes 1 successful carve per frame
+                    
+                    if not kruskal.complete:
+                        # Give Kruskal a 2x processing multiplier per frame.
+                        # Combined with guaranteed carves, it will blitz past Prim!
+                        for _ in range(2): 
+                            kruskal.step()
+
+                prim_frontier = [cell for (cell, wall) in prim.frontier]
+                kruskal_last = getattr(kruskal, 'last_carved', None)
+
+                draw_scene(screen, prim.grid, 0, f_m, "PRIM'S (CRYSTAL EXPANSION)", prim.complete, active_list=prim_frontier)
+                draw_scene(screen, kruskal.grid, (COLS * GRID_SIZE) + MARGIN, f_m, "KRUSKAL'S (HYPER SPEED MODE)", kruskal.complete, single_active=kruskal_last)
+                
+                pygame.draw.line(screen, (40, 40, 40), (WIDTH//2, 0), (WIDTH//2, HEIGHT), 2)
+
+            except Exception as e:
+                crash_error = f"CRASH DETECTED: {str(e)}"
+                print(traceback.format_exc())
+
+        else:
+            err_lbl = f_m.render(crash_error, True, (255, 50, 50))
+            screen.blit(err_lbl, (20, HEIGHT // 2 - 10))
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+if __name__ == "__main__":
+    main()
