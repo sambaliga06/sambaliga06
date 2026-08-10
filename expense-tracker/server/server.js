@@ -44,6 +44,30 @@ app.post("/api/expenses", async (req, res) => {
   }
 });
 
+app.delete("/api/expenses/:id", async (req, res) => {
+  try {
+    const deletedExpense = await Expense.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!deletedExpense) {
+      return res.status(404).json({
+        message: "Expense not found"
+      });
+    }
+
+    res.json({
+      message: "Expense deleted successfully"
+    });
+  } catch (error) {
+    console.error("Error deleting expense:", error);
+
+    res.status(500).json({
+      message: "Failed to delete expense"
+    });
+  }
+});
+
 const PORT = 5000;
 
 app.listen(PORT, () => {
@@ -63,3 +87,4 @@ app.get("/api/expenses", async (req, res) => {
     });
   }
 });
+

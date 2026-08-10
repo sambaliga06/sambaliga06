@@ -25,3 +25,15 @@ export async function createExpense(expense) {
 
   return response.json();
 }
+
+export async function deleteExpense(id) {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "DELETE"
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete expense");
+  }
+
+  return response.json();
+}

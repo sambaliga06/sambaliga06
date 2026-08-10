@@ -10,7 +10,6 @@ function ExpenseForm({ onAddExpense }) {
     event.preventDefault();
 
     const expense = {
-        id: crypto.randomUUID(),
         amount: Number(amount),
         category: category,
         description: description,

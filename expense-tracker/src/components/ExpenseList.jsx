@@ -7,13 +7,13 @@ function ExpenseList({ expenses, onDeleteExpense }) {
         <p>No expenses yet.</p>
       ) : (
         expenses.map((expense) => (
-          <div key={expense.id}>
+          <div key={expense._id}>
             <p>Amount: ₹{expense.amount}</p>
             <p>Category: {expense.category}</p>
             <p>Description: {expense.description}</p>
             <p>Date: {expense.date}</p>
 
-            <button onClick={() => onDeleteExpense(expense.id)}>
+            <button onClick={() => onDeleteExpense(expense._id)}>
               Delete
             </button>
 
