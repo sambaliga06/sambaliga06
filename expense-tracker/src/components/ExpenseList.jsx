@@ -1,5 +1,4 @@
-function ExpenseList({ expenses, onDeleteExpense }) {
-  return (
+function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {  return (
     <div>
       <h2>Expenses</h2>
 
@@ -12,6 +11,10 @@ function ExpenseList({ expenses, onDeleteExpense }) {
             <p>Category: {expense.category}</p>
             <p>Description: {expense.description}</p>
             <p>Date: {expense.date}</p>
+
+            <button onClick={() => onEditExpense(expense)}>
+              Edit
+            </button>
 
             <button onClick={() => onDeleteExpense(expense._id)}>
               Delete

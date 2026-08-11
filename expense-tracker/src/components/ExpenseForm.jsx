@@ -1,28 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function ExpenseForm({ onAddExpense }) {
+function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {  
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
 
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const expense = {
-        amount: Number(amount),
-        category: category,
-        description: description,
-        date: date
-    };
-
-    onAddExpense(expense);
-
-    setAmount("");
-    setCategory("");
-    setDescription("");
-    setDate("");
+  useEffect(() => {
+  if (expenseToEdit) {
+    setAmount(expenseToEdit.amount);
+    setCategory(expenseToEdit.category);
+    setDescription(expenseToEdit.description);
+    setDate(expenseToEdit.date.split("T")[0]);
   }
+}, [expenseToEdit]);
+
+  async function handleSubmit(e) {
+  e.preventDefault();
+
+  const expense = {
+    amount: Number(amount),
+    category,
+    description,
+    date
+  };
+
+  if (expenseToEdit) {
+    await onEditExpense(
+      expenseToEdit._id,
+      expense
+    );
+  } else {
+    await onAddExpense(expense);
+  }
+
+  setAmount("");
+  setCategory("");
+  setDescription("");
+  setDate("");
+}
 
   return (
     <div>

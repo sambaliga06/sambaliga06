@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import {  getExpenses,  createExpense,  deleteExpense as deleteExpenseFromApi} from "../services/expenseService";
-function useExpenses() {
+import {  getExpenses,
+  createExpense,
+  deleteExpense as deleteExpenseFromApi,
+  updateExpense as updateExpenseFromApi} from "../services/expenseService";function useExpenses() {
   const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
@@ -45,11 +47,30 @@ function useExpenses() {
     console.error("Failed to delete expense:", error);
   }
 }
+async function editExpense(id, expense) {
+  try {
+    const updatedExpense = await updateExpenseFromApi(
+      id,
+      expense
+    );
+
+    setExpenses((currentExpenses) =>
+      currentExpenses.map((currentExpense) =>
+        currentExpense._id === id
+          ? updatedExpense
+          : currentExpense
+      )
+    );
+  } catch (error) {
+    console.error("Failed to update expense:", error);
+  }
+}
 
   return {
     expenses,
     addExpense,
-    deleteExpense
+    deleteExpense,
+    editExpense
   };
 }
 

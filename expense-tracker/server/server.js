@@ -88,3 +88,35 @@ app.get("/api/expenses", async (req, res) => {
   }
 });
 
+app.put("/api/expenses/:id", async (req, res) => {
+  try {
+    const updatedExpense = await Expense.findByIdAndUpdate(
+      req.params.id,
+      {
+        amount: req.body.amount,
+        category: req.body.category,
+        description: req.body.description,
+        date: req.body.date
+      },
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+
+    if (!updatedExpense) {
+      return res.status(404).json({
+        message: "Expense not found"
+      });
+    }
+
+    res.json(updatedExpense);
+  } catch (error) {
+    console.error("Error updating expense:", error);
+
+    res.status(500).json({
+      message: "Failed to update expense"
+    });
+  }
+});
+

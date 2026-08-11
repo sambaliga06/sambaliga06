@@ -1,5 +1,6 @@
 import { useState } from "react";
-
+import { getCategoryTotals } from "./utils/expenseUtils";
+import ExpensePieChart from "./components/ExpensePieChart";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
 import ExpenseFilter from "./components/ExpenseFilter";
@@ -7,14 +8,16 @@ import ExpenseFilter from "./components/ExpenseFilter";
 import useExpenses from "./hooks/useExpenses";
 
 function App() {
-  const {
-    expenses,
-    addExpense,
-    deleteExpense
-  } = useExpenses();
+const {
+  expenses,
+  addExpense,
+  deleteExpense,
+  editExpense
+} = useExpenses();
 
   const [month, setMonth] = useState("all");
   const [year, setYear] = useState("all");
+  const [editingExpense, setEditingExpense] = useState(null);
 
 const filteredExpenses = expenses.filter((expense) => {
   const expenseDate = new Date(expense.date);
@@ -35,12 +38,17 @@ const totalExpense = filteredExpenses.reduce(
   0
 );
 
+const categoryTotals = getCategoryTotals(filteredExpenses);
+
   return (
     <div>
       <h1>Expense Tracker</h1>
 
-      <ExpenseForm onAddExpense={addExpense} />
-
+      <ExpenseForm
+        onAddExpense={addExpense}
+        expenseToEdit={editingExpense}
+        onEditExpense={editExpense}
+      />
       <ExpenseFilter
         month={month}
         year={year}
@@ -55,8 +63,14 @@ const totalExpense = filteredExpenses.reduce(
       <ExpenseList
         expenses={filteredExpenses}
         onDeleteExpense={deleteExpense}
+        onEditExpense={setEditingExpense}
       />
+      <h3>Category Breakdown</h3>
+
+
+      <ExpensePieChart data={categoryTotals} />
     </div>
+
   );
 }
 

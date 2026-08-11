@@ -37,3 +37,23 @@ export async function deleteExpense(id) {
 
   return response.json();
 }
+
+export async function updateExpense(id, expense) {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(expense)
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+
+    throw new Error(
+      errorData.message || "Failed to update expense"
+    );
+  }
+
+  return response.json();
+}
