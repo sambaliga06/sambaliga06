@@ -120,3 +120,85 @@ app.put("/api/expenses/:id", async (req, res) => {
   }
 });
 
+app.get("/api/expenses/summary", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    const matchStage = {};
+
+    // Year filter
+    if (year && year !== "all") {
+      const numericYear = Number(year);
+
+      matchStage.date = {
+        $gte: new Date(numericYear, 0, 1),
+        $lt: new Date(numericYear + 1, 0, 1)
+      };
+    }
+
+    // Month filter
+    if (month && month !== "all") {
+      const numericMonth = Number(month);
+
+      // If a year is already selected,
+      // use the date range for that specific month.
+      if (year && year !== "all") {
+        const numericYear = Number(year);
+
+        matchStage.date = {
+          $gte: new Date(
+            numericYear,
+            numericMonth,
+            1
+          ),
+          $lt: new Date(
+            numericYear,
+            numericMonth + 1,
+            1
+          )
+        };
+      } else {
+        // Month selected but year = all.
+        // Match the month regardless of year.
+        matchStage.$expr = {
+          $eq: [
+            { $month: "$date" },
+            numericMonth + 1
+          ]
+        };
+      }
+    }
+
+    const summary = await Expense.aggregate([
+      {
+        $match: matchStage
+      },
+      {
+        $group: {
+          _id: "$category",
+          total: {
+            $sum: "$amount"
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          category: "$_id",
+          total: 1
+        }
+      }
+    ]);
+
+    res.json(summary);
+  } catch (error) {
+    console.error(
+      "Error generating expense summary:",
+      error
+    );
+
+    res.status(500).json({
+      message: "Failed to generate expense summary"
+    });
+  }
+});

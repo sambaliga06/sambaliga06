@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { getCategoryTotals } from "./utils/expenseUtils";
+import { useEffect, useState } from "react";
+import {  getFilteredExpenses,  getCategoryTotals} from "./utils/expenseUtils";
 import ExpensePieChart from "./components/ExpensePieChart";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
@@ -10,36 +10,41 @@ import useExpenses from "./hooks/useExpenses";
 function App() {
 const {
   expenses,
+  categoryTotals,
   addExpense,
   deleteExpense,
-  editExpense
+  editExpense,
+  fetchExpenseSummary
 } = useExpenses();
+
 
   const [month, setMonth] = useState("all");
   const [year, setYear] = useState("all");
   const [editingExpense, setEditingExpense] = useState(null);
 
-const filteredExpenses = expenses.filter((expense) => {
-  const expenseDate = new Date(expense.date);
-
-  const matchesYear =
-    year === "all" ||
-    expenseDate.getFullYear() === Number(year);
-
-  const matchesMonth =
-    month === "all" ||
-    expenseDate.getMonth() === Number(month);
-
-  return matchesYear && matchesMonth;
-});
+const filteredExpenses = getFilteredExpenses(
+  expenses,
+  month,
+  year
+);
 
 const totalExpense = filteredExpenses.reduce(
   (total, expense) => total + expense.amount,
   0
 );
 
-const categoryTotals = getCategoryTotals(filteredExpenses);
+async function handleEditExpense(id, expense) {
+  await editExpense(id, expense);
+  setEditingExpense(null);
+}
+useEffect(() => {
+  console.log("Fetching summary for:", {
+    month,
+    year
+  });
 
+  fetchExpenseSummary(month, year);
+}, [month, year, expenses]);
   return (
     <div>
       <h1>Expense Tracker</h1>
@@ -47,7 +52,7 @@ const categoryTotals = getCategoryTotals(filteredExpenses);
       <ExpenseForm
         onAddExpense={addExpense}
         expenseToEdit={editingExpense}
-        onEditExpense={editExpense}
+        onEditExpense={handleEditExpense}
       />
       <ExpenseFilter
         month={month}

@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
-import {  getExpenses,
+
+import {
+  getExpenses,
   createExpense,
   deleteExpense as deleteExpenseFromApi,
-  updateExpense as updateExpenseFromApi} from "../services/expenseService";function useExpenses() {
+  updateExpense as updateExpenseFromApi,
+  getExpenseSummary
+} from "../services/expenseService";
+
+function useExpenses() {
   const [expenses, setExpenses] = useState([]);
+  const [categoryTotals, setCategoryTotals] = useState([]);
 
   useEffect(() => {
     async function loadExpenses() {
@@ -35,42 +42,61 @@ import {  getExpenses,
   }
 
   async function deleteExpense(id) {
-  try {
-    await deleteExpenseFromApi(id);
+    try {
+      await deleteExpenseFromApi(id);
 
-    setExpenses((currentExpenses) =>
-      currentExpenses.filter(
-        (expense) => expense._id !== id
-      )
-    );
-  } catch (error) {
-    console.error("Failed to delete expense:", error);
+      setExpenses((currentExpenses) =>
+        currentExpenses.filter(
+          (expense) => expense._id !== id
+        )
+      );
+    } catch (error) {
+      console.error("Failed to delete expense:", error);
+    }
   }
-}
-async function editExpense(id, expense) {
-  try {
-    const updatedExpense = await updateExpenseFromApi(
-      id,
-      expense
-    );
 
-    setExpenses((currentExpenses) =>
-      currentExpenses.map((currentExpense) =>
-        currentExpense._id === id
-          ? updatedExpense
-          : currentExpense
-      )
-    );
-  } catch (error) {
-    console.error("Failed to update expense:", error);
+  async function editExpense(id, expense) {
+    try {
+      const updatedExpense = await updateExpenseFromApi(
+        id,
+        expense
+      );
+
+      setExpenses((currentExpenses) =>
+        currentExpenses.map((currentExpense) =>
+          currentExpense._id === id
+            ? updatedExpense
+            : currentExpense
+        )
+      );
+    } catch (error) {
+      console.error("Failed to update expense:", error);
+    }
   }
-}
+
+  async function fetchExpenseSummary(month, year) {
+    try {
+      const summary = await getExpenseSummary(
+        month,
+        year
+      );
+
+      setCategoryTotals(summary);
+    } catch (error) {
+      console.error(
+        "Failed to fetch expense summary:",
+        error
+      );
+    }
+  }
 
   return {
     expenses,
+    categoryTotals,
     addExpense,
     deleteExpense,
-    editExpense
+    editExpense,
+    fetchExpenseSummary
   };
 }
 

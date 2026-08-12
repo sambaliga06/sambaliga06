@@ -57,3 +57,29 @@ export async function updateExpense(id, expense) {
 
   return response.json();
 }
+
+export async function getExpenseSummary(month, year) {
+  let url = `${API_URL}/summary`;
+
+  const params = new URLSearchParams();
+
+  if (year !== "all") {
+    params.append("year", year);
+  }
+
+  if (month !== "all") {
+    params.append("month", month);
+  }
+
+  if (params.toString()) {
+    url += `?${params.toString()}`;
+  }
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch expense summary");
+  }
+
+  return response.json();
+}
