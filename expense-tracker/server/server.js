@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Expense = require("./models/Expense");
+const Category = require("./models/Category");
 
 const app = express();
 
@@ -199,6 +200,85 @@ app.get("/api/expenses/summary", async (req, res) => {
 
     res.status(500).json({
       message: "Failed to generate expense summary"
+    });
+  }
+});
+app.get("/api/categories", async (req, res) => {
+  try {
+    const categories = await Category.find().sort({ name: 1 });
+
+    res.json(categories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+
+    res.status(500).json({
+      message: "Failed to fetch categories"
+    });
+  }
+});
+app.post("/api/categories", async (req, res) => {
+  try {
+    const category = new Category({
+      name: req.body.name
+    });
+
+    const savedCategory = await category.save();
+
+    res.status(201).json(savedCategory);
+  } catch (error) {
+    console.error("Error creating category:", error);
+
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "Category already exists"
+      });
+    }
+
+    res.status(500).json({
+      message: "Failed to create category"
+    });
+  }
+});
+
+app.delete("/api/categories/:id", async (req, res) => {
+  try {
+    const category = await Category.findById(
+      req.params.id
+    );
+
+    if (!category) {
+      return res.status(404).json({
+        message: "Category not found"
+      });
+    }
+
+    const expenseUsingCategory =
+      await Expense.findOne({
+        category: category.name
+      });
+
+    if (expenseUsingCategory) {
+      return res.status(400).json({
+        message:
+          "Cannot delete category because it is being used by expenses"
+      });
+    }
+
+    await Category.findByIdAndDelete(
+      req.params.id
+    );
+
+    res.json({
+      message: "Category deleted successfully"
+    });
+  } catch (error) {
+    console.error(
+      "Error deleting category:",
+      error
+    );
+
+    res.status(500).json({
+      message: "Failed to delete category"
     });
   }
 });

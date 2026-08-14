@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {  
+function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense,  categories}) {  
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -53,19 +53,20 @@ function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {
         />
 
         <select
-          value={category}
-          onChange={(event) => setCategory(event.target.value)}
-        >
-          <option value="">Select category</option>
-          <option value="Food">Food</option>
-          <option value="Transport">Transport</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Bills">Bills</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Health">Health</option>
-          <option value="Education">Education</option>
-          <option value="Other">Other</option>
-        </select>
+  value={category}
+  onChange={(e) => setCategory(e.target.value)}
+>
+  <option value="">Select Category</option>
+
+  {categories.map((item) => (
+    <option
+      key={item._id}
+      value={item.name}
+    >
+      {item.name}
+    </option>
+  ))}
+</select>
 
         <input
           type="text"
