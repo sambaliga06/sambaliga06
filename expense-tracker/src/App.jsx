@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { getFilteredExpenses } from "./utils/expenseUtils";
+import {  getFilteredExpenses,  getExpensesByDateRange} from "./utils/expenseUtils";
 import ExpensePieChart from "./components/ExpensePieChart";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
 import ExpenseFilter from "./components/ExpenseFilter";
+import ExpenseSummary from "./components/ExpenseSummary";
 
+import DateRangeFilter from "./components/DateRangeFilter";
 import useExpenses from "./hooks/useExpenses";
-import useCategories from "./hooks/useCategories";
-import CategoryManager from "./components/CategoryManager";
+//import useCategories from "./hooks/useCategories";
+//import CategoryManager from "./components/CategoryManager";
 
 function App() {
 const {
@@ -19,24 +21,26 @@ const {
   fetchExpenseSummary
 } = useExpenses();
 
-const {
-  categories,
-  addCategory,
-  deleteCategory,
-  categoryError
-} = useCategories();
+//const {  categories,  addCategory,  deleteCategory,  categoryError} = useCategories();
 
 
   const [month, setMonth] = useState("all");
   const [year, setYear] = useState("all");
   const [editingExpense, setEditingExpense] = useState(null);
+  const [startDate, setStartDate] = useState("");
+const [endDate, setEndDate] = useState("");
 
-const filteredExpenses = getFilteredExpenses(
+const monthYearExpenses = getFilteredExpenses(
   expenses,
   month,
   year
 );
 
+const filteredExpenses = getExpensesByDateRange(
+  monthYearExpenses,
+  startDate,
+  endDate
+);
 const totalExpense = filteredExpenses.reduce(
   (total, expense) => total + expense.amount,
   0
@@ -59,15 +63,14 @@ useEffect(() => {
   onAddExpense={addExpense}
   expenseToEdit={editingExpense}
   onEditExpense={handleEditExpense}
-  categories={categories}
 />
 
-<CategoryManager
+{/* <CategoryManager
   categories={categories}
   onAddCategory={addCategory}
   onDeleteCategory={deleteCategory}
   error={categoryError}
-/>
+/> */}
       <ExpenseFilter
         month={month}
         year={year}
@@ -75,8 +78,15 @@ useEffect(() => {
         onYearChange={setYear}
       />
 
-      <h2>Total: ₹{totalExpense}</h2>
 
+        <DateRangeFilter
+          startDate={startDate}
+          endDate={endDate}
+          onStartDateChange={setStartDate}
+          onEndDateChange={setEndDate}
+        />
+
+        <ExpenseSummary expenses={filteredExpenses} />  
 
 
       <ExpenseList
