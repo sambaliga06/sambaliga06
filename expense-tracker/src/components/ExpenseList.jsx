@@ -37,7 +37,7 @@ function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {
 );
  return (
   
-<div className="expense-list">
+<div>
   <h2>Expenses</h2>
 
   <input
@@ -68,10 +68,16 @@ function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {
     </option>
   </select>
 
+  <div className="expense-list card shadow-sm">
+
   {sortedExpenses.length === 0 ? (
-    <p>No expenses found.</p>
+    <tr>
+    <td colSpan="4" className="text-center text-muted py-4">
+      No expenses found.
+    </td>
+  </tr>
   ) : (
-    <table>
+    <table className="table table-hover align-middle">
       <thead>
         <tr>
           <th>Date</th>
@@ -106,7 +112,7 @@ function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {
             <td>₹{expense.amount}</td>
 
             <td>
-              <button
+              <button className="btn btn-sm btn-outline-primary"
                 onClick={() =>
                   onEditExpense(expense)
                 }
@@ -114,7 +120,7 @@ function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {
                 Edit
               </button>
 
-              <button
+              <button className="btn btn-sm btn-outline-danger"
                 onClick={() =>
                   onDeleteExpense(expense._id)
                 }
@@ -127,6 +133,7 @@ function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {
       </tbody>
     </table>
   )}
+  </div>
 </div>
  )}
 export default ExpenseList;

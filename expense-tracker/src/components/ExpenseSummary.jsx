@@ -7,15 +7,33 @@ function ExpenseSummary({ expenses }) {
   const transactionCount = expenses.length;
 
   return (
-    <div>
-      <div>
-        <h3>Total Expenses</h3>
-        <p>₹{totalExpense}</p>
+    <div className="row g-3 mb-4">
+      <div className="col-md-6">
+        <div className="card shadow-sm h-100">
+          <div className="card-body">
+            <h6 className="card-title text-muted">
+              Total Expenses
+            </h6>
+
+            <h2 className="mb-0">
+              ₹{totalExpense.toLocaleString("en-IN")}
+            </h2>
+          </div>
+        </div>
       </div>
 
-      <div>
-        <h3>Transactions</h3>
-        <p>{transactionCount}</p>
+      <div className="col-md-6">
+        <div className="card shadow-sm h-100">
+          <div className="card-body">
+            <h6 className="card-title text-muted">
+              Transactions
+            </h6>
+
+            <h2 className="mb-0">
+              {transactionCount}
+            </h2>
+          </div>
+        </div>
       </div>
     </div>
   );

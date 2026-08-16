@@ -23,10 +23,20 @@ function CategoryManager({
   }
 
   return (
-    <div>
-      <h2>Category Management</h2>
-            {error && (  <p>  {error} </p> )}
+    <div className="card shadow-sm">
+  <div className="card-body">
+    <h5 className="card-title">
+      Category Management
+    </h5>
 
+    <p className="text-muted">
+      Add or remove expense categories.
+    </p>
+      {error && (
+  <div className="alert alert-danger" role="alert">
+    {error}
+  </div>
+    )}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -42,21 +52,26 @@ function CategoryManager({
         </button>
       </form>
 
-      <ul>
-        {categories.map((category) => (
-          <li key={category._id}>
-            {category.name}
+    <ul className="list-group">
+      {categories.map((category) => (
+        <li
+          key={category._id}
+          className="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <span>{category.name}</span>
 
-            <button
-              onClick={() =>
-                onDeleteCategory(category._id)
-              }
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+          <button
+            className="btn btn-sm btn-outline-danger"
+            onClick={() =>
+              onDeleteCategory(category._id)
+            }
+          >
+            Delete
+          </button>
+        </li>
+      ))}
+    </ul>
+    </div>
     </div>
   );
 }

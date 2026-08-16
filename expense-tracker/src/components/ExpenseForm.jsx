@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import useCategories from "../hooks/useCategories";
+const [error, setError] = useState("");
 
-function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense,  categories}) {  
+function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {  
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const { categories } = useCategories();
 
   useEffect(() => {
   if (expenseToEdit) {
@@ -17,6 +20,11 @@ function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense,  categorie
 
   async function handleSubmit(e) {
   e.preventDefault();
+
+  if (Number(amount) <= 0) {
+    setError("Amount must be greater than 0.");
+    return;
+  }
 
   const expense = {
     amount: Number(amount),
@@ -41,51 +49,85 @@ function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense,  categorie
 }
 
   return (
-    <div>
-      <h2>Add Expense</h2>
+    <div className="card shadow-sm mb-4">
+  <div className="card-body">
+    <h5 className="card-title mb-3">
+      {expenseToEdit ? "Edit Expense" : "Add Expense"}
+    </h5>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="number"
-          placeholder="Amount"
-          value={amount}
-          onChange={(event) => setAmount(event.target.value)}
-        />
+    <form onSubmit={handleSubmit}>
+      <div className="row g-3">
+        <div className="col-md-3">
+          <label className="form-label">
+            Amount
+          </label>
 
-        <select
-  value={category}
-  onChange={(e) => setCategory(e.target.value)}
->
-  <option value="">Select Category</option>
+          <input type="number"  className="form-control"  value={amount}  onChange={(e) => setAmount(e.target.value)}  min="0" required/>
+        </div>
 
-  {categories.map((item) => (
-    <option
-      key={item._id}
-      value={item.name}
-    >
-      {item.name}
-    </option>
-  ))}
-</select>
+        <div className="col-md-3">
+          <label className="form-label">
+            Category
+          </label>
 
-        <input
-          type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-        />
+          <select
+            className="form-select"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            <option value="">Select category</option>
 
-        <input
-          type="date"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-        />
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <button type="submit">
-          Add Expense
-        </button>
-      </form>
-    </div>
+        <div className="col-md-3">
+          <label className="form-label">
+            Date
+          </label>
+
+          <input
+            type="date"
+            className="form-control"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="col-md-3">
+          <label className="form-label">
+            Description
+          </label>
+
+          <input
+            type="text"
+            className="form-control"
+            value={description}
+            onChange={(e) =>
+              setDescription(e.target.value)
+            }
+            placeholder="Optional"
+          />
+        </div>
+
+        <div className="col-12">
+          <button
+            type="submit"
+            className="btn btn-primary"
+          >
+            {expenseToEdit ? "Update Expense" : "Add Expense"}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
   );
 }
 
