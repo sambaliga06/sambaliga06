@@ -1,49 +1,49 @@
-import { NavLink } from "react-router-dom";
+import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend
+} from "recharts";
 
-function Navbar() {
+function ExpensePieChart({ data }) {
+  if (data.length === 0) {
+    return <p>No expenses for this period.</p>;
+  }
+
+  const renderLabel = ({ category, percent }) =>
+    `${category} ${(percent * 100).toFixed(1)}%`;
+
+  const COLORS = [  "#0d6efd",  "#198754",  "#ecb81e",  "#dc3545",  "#583698",  "#fd7e14",  "#34e2ae",  "#2ad1f3"];
+
   return (
-    <nav className="navbar navbar-expand-lg bg-dark navbar-dark">
-      <div className="container">
-        <NavLink className="navbar-brand" to="/expenses">
-          Life After Work
-        </NavLink>
+    <div style={{ width: "100%", height: 350 }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="total"
+            nameKey="category"
+            cx="50%"
+            cy="45%"
+            outerRadius="65%"
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
 
-        <div className="navbar-nav ms-auto">
-          <div className="nav-item dropdown">
-            <button
-              className="nav-link dropdown-toggle"
-              type="button"
-              data-bs-toggle="dropdown"
-            >
-              Expense Tracker
-            </button>
+          <Tooltip            formatter={(value) => [`₹${value}`, "Amount"]}          />
 
-            <ul className="dropdown-menu">
-              <li>
-                <NavLink className="dropdown-item" to="/expenses">
-                  Expenses
-                </NavLink>
-              </li>
-
-              <li>
-                <NavLink className="dropdown-item" to="/expenses/analysis">
-                  Analysis
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-
-          <NavLink className="nav-link" to="/time-tracker">
-            Time Tracker
-          </NavLink>
-
-          <NavLink className="nav-link" to="/settings">
-            Settings
-          </NavLink>
-        </div>
-      </div>
-    </nav>
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 
-export default Navbar;
+export default ExpensePieChart;

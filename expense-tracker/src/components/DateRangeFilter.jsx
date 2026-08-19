@@ -8,25 +8,25 @@ function DateRangeFilter({
 }) {
   const [error, setError] = useState("");
 
-function handleStartDateChange(value) {
-  if (endDate && value > endDate) {
-    setError("Start date cannot be after end date.");
-    return;
+  function handleStartDateChange(value) {
+    if (endDate && value > endDate) {
+      setError("Start date cannot be after end date.");
+      return;
+    }
+
+    setError("");
+    onStartDateChange(value);
   }
 
-  setError("");
-  onStartDateChange(value);
-}
+  function handleEndDateChange(value) {
+    if (startDate && value < startDate) {
+      setError("End date cannot be before start date.");
+      return;
+    }
 
-function handleEndDateChange(value) {
-  if (startDate && value < startDate) {
-    setError("End date cannot be before start date.");
-    return;
+    setError("");
+    onEndDateChange(value);
   }
-
-  setError("");
-  onEndDateChange(value);
-}
 
   function handleClear() {
     setError("");
@@ -36,33 +36,35 @@ function handleEndDateChange(value) {
 
   return (
     <div>
-      <label>
-        From:
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) =>
-            handleStartDateChange(e.target.value)
-          }
-        />
-      </label>
+      <div className="row g-3">
+        <div className="col-md-5">
+          <label className="form-label">
+            From
+          </label>
 
-      <label>
-        To:
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) =>
-            handleEndDateChange(e.target.value)
-          }
-        />
-      </label>
+          <input   type="date" className="form-control"   value={startDate}   onChange={(e) =>    handleStartDateChange(e.target.value)  } />
+        </div>
 
-      <button onClick={handleClear}>
-        Clear Dates
-      </button>
+        <div className="col-md-5">
+          <label className="form-label">
+            To
+          </label>
 
-      {error && <p>{error}</p>}
+          <input type="date"  className="form-control" value={endDate}  onChange={(e) =>  handleEndDateChange(e.target.value)   }  />
+        </div>
+
+        <div className="col-md-2 d-flex align-items-end">
+          <button   type="button"  className="btn btn-outline-secondary w-100" onClick={handleClear}     >
+            Clear
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="alert alert-danger mt-3 mb-0" role="alert">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

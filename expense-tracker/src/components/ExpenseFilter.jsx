@@ -1,9 +1,13 @@
 function ExpenseFilter({ month, year, onMonthChange, onYearChange }) {
   return (
-    <div>
-      <label>
-        Year:
+    <div className="row g-3">
+      <div className="col-md-6">
+        <label className="form-label">
+          Year
+        </label>
+
         <select
+          className="form-select"
           value={year}
           onChange={(e) => onYearChange(e.target.value)}
         >
@@ -12,11 +16,15 @@ function ExpenseFilter({ month, year, onMonthChange, onYearChange }) {
           <option value="2025">2025</option>
           <option value="2024">2024</option>
         </select>
-      </label>
+      </div>
 
-      <label>
-        Month:
+      <div className="col-md-6">
+        <label className="form-label">
+          Month
+        </label>
+
         <select
+          className="form-select"
           value={month}
           onChange={(e) => onMonthChange(e.target.value)}
         >
@@ -34,9 +42,10 @@ function ExpenseFilter({ month, year, onMonthChange, onYearChange }) {
           <option value="10">November</option>
           <option value="11">December</option>
         </select>
-      </label>
+      </div>
     </div>
   );
 }
 
 export default ExpenseFilter;
+

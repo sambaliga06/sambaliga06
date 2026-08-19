@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import useCategories from "../hooks/useCategories";
-const [error, setError] = useState("");
 
 function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {  
   const [amount, setAmount] = useState("");
@@ -8,6 +7,8 @@ function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const { categories } = useCategories();
+  const [error, setError] = useState("");
+
 
   useEffect(() => {
   if (expenseToEdit) {

@@ -36,21 +36,26 @@ function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {
     }  }
 );
  return (
-  
-<div>
-  <h2>Expenses</h2>
+  <div>
+<div className="d-flex justify-content-between align-items-center mb-3">
+  <h2 className="card-title mb-0">Expenses</h2>
+  <span className="text-muted">    {expenses.length} expenses  </span>
+</div>
+  <div className="row g-3 mb-3">
+  <div className="col-md-8">
 
-  <input
-    type="text"
+  <input    type="text" className="form-control"
     placeholder="Search expenses..."
     value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
+    onChange={(e) => setSearchTerm(e.target.value)}  />
+  </div>
 
-  <select
+  <div className="col-md-4">
+
+  <select  className="form-select"
     value={sortOption}
-    onChange={(e) => setSortOption(e.target.value)}
-  >
+    onChange={(e) => setSortOption(e.target.value)}  >
+
     <option value="date-desc">
       Date: Newest → Oldest
     </option>
@@ -67,7 +72,7 @@ function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {
       Amount: Lowest → Highest
     </option>
   </select>
-
+  </div>
   <div className="expense-list card shadow-sm">
 
   {sortedExpenses.length === 0 ? (
@@ -133,6 +138,8 @@ function ExpenseList({  expenses,  onDeleteExpense,  onEditExpense}) {
       </tbody>
     </table>
   )}
+  
+  </div>
   </div>
 </div>
  )}
