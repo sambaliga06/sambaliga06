@@ -1,49 +1,75 @@
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend
-} from "recharts";
+import { NavLink } from "react-router-dom";
 
-function ExpensePieChart({ data }) {
-  if (data.length === 0) {
-    return <p>No expenses for this period.</p>;
-  }
-
-  const renderLabel = ({ category, percent }) =>
-    `${category} ${(percent * 100).toFixed(1)}%`;
-
-  const COLORS = [  "#0d6efd",  "#198754",  "#ecb81e",  "#dc3545",  "#583698",  "#fd7e14",  "#34e2ae",  "#2ad1f3"];
-
+function Navbar() {
   return (
-    <div style={{ width: "100%", height: 350 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="total"
-            nameKey="category"
-            cx="50%"
-            cy="45%"
-            outerRadius="65%"
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
+    <nav className="navbar navbar-expand-lg bg-dark navbar-dark">
+      <div className="container">
+        <NavLink className="navbar-brand fw-semibold" to="/expenses">
+          Life After Work
+        </NavLink>
 
-          <Tooltip            formatter={(value) => [`₹${value}`, "Amount"]}          />
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavbar"
+          aria-controls="mainNavbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+        <div className="collapse navbar-collapse" id="mainNavbar">
+          <div className="navbar-nav ms-auto">
+            <div className="nav-item dropdown">
+              <button
+                className="nav-link dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Expense Tracker
+              </button>
+
+              <ul className="dropdown-menu dropdown-menu-dark">
+                <li>
+                  <NavLink
+                    end
+                    className={({ isActive }) =>
+                      isActive ? "dropdown-item active" : "dropdown-item"
+                    }
+                    to="/expenses"
+                  >
+                    Expenses
+                  </NavLink>
+                </li>
+
+                <li>
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive ? "dropdown-item active" : "dropdown-item"
+                    }
+                    to="/expenses/analysis"
+                  >
+                    Analysis
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+
+            <NavLink className="nav-link" to="/time-tracker">
+              Time Tracker
+            </NavLink>
+
+            <NavLink className="nav-link" to="/settings">
+              Settings
+            </NavLink>
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 }
 
-export default ExpensePieChart;
+export default Navbar;
