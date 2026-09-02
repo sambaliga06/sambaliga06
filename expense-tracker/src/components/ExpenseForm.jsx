@@ -1,60 +1,60 @@
 import { useEffect, useState } from "react";
 import useCategories from "../hooks/useCategories";
 
-function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {  
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-  const { categories } = useCategories();
-  const [error, setError] = useState("");
+function ExpenseForm({ onAddExpense, expenseToEdit, onEditExpense }) {
+const [amount, setAmount] = useState("");
+const [category, setCategory] = useState("");
+const [description, setDescription] = useState("");
+const [date, setDate] = useState("");
+const { categories } = useCategories();
+const [error, setError] = useState("");
 
-
-  useEffect(() => {
-  if (expenseToEdit) {
-    setAmount(expenseToEdit.amount);
-    setCategory(expenseToEdit.category);
-    setDescription(expenseToEdit.description);
-    setDate(expenseToEdit.date.split("T")[0]);
-  }
+useEffect(() => {
+if (expenseToEdit) {
+setAmount(expenseToEdit.amount);
+setCategory(expenseToEdit.category);
+setDescription(expenseToEdit.description);
+setDate(expenseToEdit.date.split("T")[0]);
+}
 }, [expenseToEdit]);
 
-  async function handleSubmit(e) {
-  e.preventDefault();
+async function handleSubmit(e) {
+e.preventDefault();
 
-  if (Number(amount) <= 0) {
-    setError("Amount must be greater than 0.");
-    return;
-  }
 
-  const expense = {
-    amount: Number(amount),
-    category,
-    description,
-    date
-  };
-
-  if (expenseToEdit) {
-    await onEditExpense(
-      expenseToEdit._id,
-      expense
-    );
-  } else {
-    await onAddExpense(expense);
-  }
-
-  setAmount("");
-  setCategory("");
-  setDescription("");
-  setDate("");
+if (Number(amount) <= 0) {
+  setError("Amount must be greater than 0.");
+  return;
 }
 
-  return (
-    <div className="card shadow-sm mb-4">
-  <div className="card-body">
-    <h5 className="card-title mb-3">
-      {expenseToEdit ? "Edit Expense" : "Add Expense"}
-    </h5>
+setError("");
+
+const expense = {
+  amount: Number(amount),
+  category,
+  description,
+  date
+};
+
+if (expenseToEdit) {
+  await onEditExpense(
+    expenseToEdit._id,
+    expense
+  );
+} else {
+  await onAddExpense(expense);
+}
+
+setAmount("");
+setCategory("");
+setDescription("");
+setDate("");
+
+}
+
+return ( <div className="card shadow-sm mb-4"> <div className="card-body"> <h5 className="card-title mb-4">
+{expenseToEdit ? "Edit Expense" : "Add Expense"} </h5>
+
 
     <form onSubmit={handleSubmit}>
       <div className="row g-3">
@@ -63,7 +63,14 @@ function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {
             Amount
           </label>
 
-          <input type="number"  className="form-control"  value={amount}  onChange={(e) => setAmount(e.target.value)}  min="0" required/>
+          <input
+            type="number"
+            className="form-control"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            min="0"
+            required
+          />
         </div>
 
         <div className="col-md-3">
@@ -110,18 +117,21 @@ function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {
             type="text"
             className="form-control"
             value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional"
           />
         </div>
 
+        {error && (
+          <div className="col-12">
+            <div className="text-danger small">
+              {error}
+            </div>
+          </div>
+        )}
+
         <div className="col-12">
-          <button
-            type="submit"
-            className="btn btn-primary"
-          >
+          <button  type="submit"   className="btn btn-primary"  >
             {expenseToEdit ? "Update Expense" : "Add Expense"}
           </button>
         </div>
@@ -129,7 +139,9 @@ function ExpenseForm({  onAddExpense,  expenseToEdit,  onEditExpense}) {
     </form>
   </div>
 </div>
-  );
+
+
+);
 }
 
 export default ExpenseForm;

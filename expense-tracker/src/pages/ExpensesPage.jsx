@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   getFilteredExpenses,
@@ -18,16 +18,13 @@ function ExpensesPage() {
     expenses,
     addExpense,
     deleteExpense,
-    editExpense,
-    fetchExpenseSummary
+    editExpense
   } = useExpenses();
 
   const [month, setMonth] = useState("all");
   const [year, setYear] = useState("all");
-
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-
   const [editingExpense, setEditingExpense] =
     useState(null);
 
@@ -48,22 +45,11 @@ function ExpensesPage() {
     setEditingExpense(null);
   }
 
-  useEffect(() => {
-    console.log("Fetching summary for:", {
-      month,
-      year
-    });
-
-    fetchExpenseSummary(month, year);
-  }, [month, year, expenses]);
-
   return (
     <div>
       <h1>Expenses</h1>
 
-      <ExpenseSummary
-        expenses={filteredExpenses}
-      />
+      <ExpenseSummary        expenses={filteredExpenses}      />
 
       <ExpenseForm
         onAddExpense={addExpense}
@@ -72,32 +58,27 @@ function ExpensesPage() {
       />
 
       <div className="card shadow-sm mb-4">
-  <div className="card-body">
-    <h5 className="card-title mb-3">
-      Filters
-    </h5>
+        <div className="card-body">
+          <h5 className="card-title mb-3">
+            Filters
+          </h5>
 
-    <div className="row g-3">
-      <div className="col-md-6">
-        <ExpenseFilter
-          month={month}
-          year={year}
-          onMonthChange={setMonth}
-          onYearChange={setYear}
-        />
-      </div>
+          <div className="row g-3">
+            <div className="col-md-6">
+              <ExpenseFilter month={month} year={year} onMonthChange={setMonth} onYearChange={setYear} />
+            </div>
 
-      <div className="col-md-6">
-        <DateRangeFilter
-          startDate={startDate}
-          endDate={endDate}
-          onStartDateChange={setStartDate}
-          onEndDateChange={setEndDate}
-        />
+            <div className="col-md-6">
+              <DateRangeFilter
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={setStartDate}
+                onEndDateChange={setEndDate}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       <ExpenseList
         expenses={filteredExpenses}

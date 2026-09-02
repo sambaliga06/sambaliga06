@@ -2,26 +2,6 @@
   margin-top: 20px;
 }
 
-.expense-list table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.expense-list th,
-.expense-list td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-.expense-list th {
-  font-weight: bold;
-}
-
-.expense-list button {
-  margin-right: 5px;
-}
-
 .expense-category {
   position: relative;
   cursor: pointer;
@@ -32,11 +12,13 @@
   position: absolute;
   left: 0;
   top: 100%;
-  padding: 8px;
+  padding: 8px 10px;
   background: white;
   border: 1px solid #ddd;
+  border-radius: 4px;
   white-space: nowrap;
   z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .expense-category:hover .expense-description {

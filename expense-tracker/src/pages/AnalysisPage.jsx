@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 
 import ExpenseFilter from "../components/ExpenseFilter";
 import ExpensePieChart from "../components/ExpensePieChart";
-
+import ExpenseCalendar from "../components/ExpenseCalendar";
 import useExpenses from "../hooks/useExpenses";
+import CategoryProgress from "../components/CategoryProgress";
 
 function AnalysisPage() {
-  const {
-    categoryTotals,
-    fetchExpenseSummary
-  } = useExpenses();
+const {
+  expenses,
+  categoryTotals,
+  fetchExpenseSummary
+} = useExpenses();
 
   const [month, setMonth] = useState("all");
   const [year, setYear] = useState("all");
@@ -43,6 +45,16 @@ function AnalysisPage() {
         </div>
       </div>
 
+      <div className="card shadow-sm mb-4">
+      <div className="card-body">
+        <h5 className="card-title mb-4">
+          Spending by Category
+        </h5>
+
+        <CategoryProgress data={categoryTotals} />
+      </div>
+    </div>
+
       <div className="card shadow-sm">
         <div className="card-body">
           <h5 className="card-title mb-4">
@@ -51,6 +63,9 @@ function AnalysisPage() {
 
           <ExpensePieChart data={categoryTotals} />
         </div>
+      </div>
+           <div className="mt-4">
+          <ExpenseCalendar expenses={expenses} />
       </div>
     </div>
   );

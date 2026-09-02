@@ -42,7 +42,14 @@ function DateRangeFilter({
             From
           </label>
 
-          <input   type="date" className="form-control"   value={startDate}   onChange={(e) =>    handleStartDateChange(e.target.value)  } />
+          <input
+            type="date"
+            className="form-control"
+            value={startDate}
+            onChange={(e) =>
+              handleStartDateChange(e.target.value)
+            }
+          />
         </div>
 
         <div className="col-md-5">
@@ -50,11 +57,22 @@ function DateRangeFilter({
             To
           </label>
 
-          <input type="date"  className="form-control" value={endDate}  onChange={(e) =>  handleEndDateChange(e.target.value)   }  />
+          <input
+            type="date"
+            className="form-control"
+            value={endDate}
+            onChange={(e) =>
+              handleEndDateChange(e.target.value)
+            }
+          />
         </div>
 
         <div className="col-md-2 d-flex align-items-end">
-          <button   type="button"  className="btn btn-outline-secondary w-100" onClick={handleClear}     >
+          <button
+            type="button"
+            className="btn btn-outline-secondary w-100"
+            onClick={handleClear}
+          >
             Clear
           </button>
         </div>
