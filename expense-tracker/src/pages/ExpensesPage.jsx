@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import {  exportExpenses,  importExpenses} from "../services/expenseService";
 import {
   getFilteredExpenses,
   getExpensesByDateRange
@@ -44,10 +45,86 @@ function ExpensesPage() {
     await editExpense(id, expense);
     setEditingExpense(null);
   }
+  async function handleExportExpenses() {
+  try {
+    await exportExpenses();
+  } catch (error) {
+    console.error("Failed to export expenses:", error);
+  }
+}
+
+async function handleImportExpenses(e) {
+  const file = e.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  const confirmed = window.confirm(
+    `Are you sure you want to import "${file.name}"?`
+  );
+
+  if (!confirmed) {
+    e.target.value = "";
+    return;
+  }
+
+  try {
+    const csv = await file.text();
+
+    const result = await importExpenses(csv);
+
+    if (result.invalidRows.length > 0) {
+      window.alert(
+        `Import completed.\n\n` +
+        `Imported: ${result.count} expenses\n` +
+        `Invalid rows skipped: ${result.invalidRows.join(", ")}`
+      );
+    } else {
+      window.alert(
+        `Import completed successfully.\n\n` +
+        `Imported: ${result.count} expenses`
+      );
+    }
+
+    window.location.reload();
+  } catch (error) {
+    window.alert(
+      error.message || "Failed to import expenses"
+    );
+
+    console.error("Failed to import expenses:", error);
+  }
+
+  e.target.value = "";
+}
 
   return (
     <div>
-      <h1>Expenses</h1>
+
+      <div className="d-flex justify-content-between align-items-center mb-4">
+  <h1 className="mb-0">Expenses</h1>
+
+  <div className="d-flex gap-2">
+    <label className="btn btn-outline-success">
+      Import CSV
+      <input
+        type="file"
+        accept=".csv"
+        className="d-none"
+        onChange={handleImportExpenses}
+      />
+    </label>
+
+    <button
+      type="button"
+      className="btn btn-outline-primary"
+      onClick={handleExportExpenses}
+    >
+      Export CSV
+    </button>
+  </div>
+</div>
 
       <ExpenseSummary        expenses={filteredExpenses}      />
 

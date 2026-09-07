@@ -282,3 +282,151 @@ app.delete("/api/categories/:id", async (req, res) => {
     });
   }
 });
+
+app.get("/api/expenses/export", async (req, res) => {
+  try {
+    const expenses = await Expense.find().sort({ date: -1 });
+
+    let csv = "Date,Category,Amount,Description\n";
+
+    expenses.forEach((expense) => {
+      const date = new Date(expense.date).toISOString().split("T")[0];
+
+      const category = `"${String(expense.category).replace(/"/g, '""')}"`;
+
+      const amount = expense.amount;
+
+      const description = `"${String(expense.description || "").replace(/"/g, '""')}"`;
+
+      csv += `${date},${category},${amount},${description}\n`;
+    });
+
+    res.header("Content-Type", "text/csv");
+    res.attachment("expenses.csv");
+    res.send(csv);
+  } catch (error) {
+    console.error("Error exporting expenses:", error);
+
+    res.status(500).json({
+      message: "Failed to export expenses"
+    });
+  }
+});
+
+app.post("/api/expenses/import", async (req, res) => {
+  try {
+    const { csv } = req.body;
+
+    if (!csv) {
+      return res.status(400).json({
+        message: "CSV data is required"
+      });
+    }
+
+    const lines = csv.trim().split(/\r?\n/);
+
+    if (lines.length < 2) {
+      return res.status(400).json({
+        message: "CSV file is empty"
+      });
+    }
+
+    const categories = await Category.find();
+
+    const categoryMap = new Map(
+      categories.map((category) => [
+        category.name.toLowerCase(),
+        category.name
+      ])
+    );
+
+    const expenses = [];
+    const invalidRows = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+
+      if (!line) {
+        continue;
+      }
+
+      const parts = line.split(",");
+
+if (parts.length < 4) {
+  invalidRows.push(i + 1);
+  continue;
+}
+
+      const date = parts[0].replace(/^"|"$/g, "").trim();
+      const category = parts[1].replace(/^"|"$/g, "").trim();
+      const amount = Number(
+        parts[2].replace(/^"|"$/g, "").trim()
+      );
+
+      const description = parts
+        .slice(3)
+        .join(",")
+        .replace(/^"|"$/g, "")
+        .replace(/""/g, '"')
+        .trim();
+
+      const dateParts = date.split("-");
+
+      const validDate =
+        dateParts.length === 3 &&
+        dateParts[0].length === 2 &&
+        dateParts[1].length === 2 &&
+        dateParts[2].length === 4;
+
+      const parsedDate = validDate
+        ? new Date(
+            Number(dateParts[2]),
+            Number(dateParts[1]) - 1,
+            Number(dateParts[0])
+          )
+        : null;
+
+      const validCategory = categoryMap.has(
+        category.toLowerCase()
+      );
+
+      if (
+        !validDate ||
+        !validCategory ||
+        !Number.isFinite(amount) ||
+        amount <= 0
+      ) {
+        invalidRows.push(i + 1);
+        continue;
+      }
+
+      expenses.push({
+        date: parsedDate,
+        category: categoryMap.get(category.toLowerCase()),
+        amount,
+        description
+      });
+    }
+
+    if (expenses.length === 0) {
+      return res.status(400).json({
+        message: "No valid expenses found in CSV",
+        invalidRows
+      });
+    }
+
+    const importedExpenses = await Expense.insertMany(expenses);
+
+    res.status(201).json({
+      message: "Expenses imported successfully",
+      count: importedExpenses.length,
+      invalidRows
+    });
+  } catch (error) {
+    console.error("Error importing expenses:", error);
+
+    res.status(500).json({
+      message: "Failed to import expenses"
+    });
+  }
+});

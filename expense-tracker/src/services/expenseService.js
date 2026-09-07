@@ -83,3 +83,46 @@ export async function getExpenseSummary(month, year) {
 
   return response.json();
 }
+
+
+export async function exportExpenses() {
+  const response = await fetch(`${API_URL}/export`);
+
+  if (!response.ok) {
+    throw new Error("Failed to export expenses");
+  }
+
+  const blob = await response.blob();
+
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "expenses.csv";
+
+  document.body.appendChild(link);
+  link.click();
+
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+export async function importExpenses(csv) {
+  const response = await fetch(`${API_URL}/import`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ csv })
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+
+    throw new Error(
+      errorData.message || "Failed to import expenses"
+    );
+  }
+
+  return response.json();
+}
