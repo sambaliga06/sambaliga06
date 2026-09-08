@@ -19,15 +19,19 @@ function ExpensesPage() {
     expenses,
     addExpense,
     deleteExpense,
-    editExpense
+    editExpense,
+  loadExpenses
   } = useExpenses();
 
   const [month, setMonth] = useState("all");
   const [year, setYear] = useState("all");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [editingExpense, setEditingExpense] =
-    useState(null);
+  const [editingExpense, setEditingExpense] =    useState(null);
+  const [importMessage, setImportMessage] = useState("");
+  const [importError, setImportError] = useState("");
+
+  
 
   const monthYearExpenses = getFilteredExpenses(
     expenses,
@@ -69,39 +73,49 @@ async function handleImportExpenses(e) {
     return;
   }
 
+  setImportMessage("");
+  setImportError("");
+
   try {
     const csv = await file.text();
 
     const result = await importExpenses(csv);
 
     if (result.invalidRows.length > 0) {
-      window.alert(
-        `Import completed.\n\n` +
-        `Imported: ${result.count} expenses\n` +
-        `Invalid rows skipped: ${result.invalidRows.join(", ")}`
+      setImportMessage(
+        `Imported ${result.count} expenses. Invalid rows skipped: ${result.invalidRows.join(", ")}`
       );
     } else {
-      window.alert(
-        `Import completed successfully.\n\n` +
-        `Imported: ${result.count} expenses`
+      setImportMessage(
+        `Successfully imported ${result.count} expenses.`
       );
     }
+    await loadExpenses();
 
-    window.location.reload();
   } catch (error) {
-    window.alert(
-      error.message || "Failed to import expenses"
+    setImportError(
+      error.message || "Failed to import expenses."
     );
-
-    console.error("Failed to import expenses:", error);
   }
 
   e.target.value = "";
 }
-
   return (
     <div>
+          {importMessage && (
+      <div className="alert alert-warning alert-dismissible fade show" role="alert">
+        {importMessage}
 
+        <button   type="button"  className="btn-close"    aria-label="Close"    onClick={() => setImportMessage("")}  />
+      </div>
+    )}
+
+    {importError && (  <div className="alert alert-danger alert-dismissible fade show" role="alert">
+    {importError}
+
+    <button      type="button"  className="btn-close" aria-label="Close"    onClick={() => setImportError("")} />
+  </div>
+)}
       <div className="d-flex justify-content-between align-items-center mb-4">
   <h1 className="mb-0">Expenses</h1>
 

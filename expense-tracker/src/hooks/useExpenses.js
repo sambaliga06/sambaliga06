@@ -13,20 +13,18 @@ function useExpenses() {
   const [categoryTotals, setCategoryTotals] = useState([]);
 
   useEffect(() => {
-    async function loadExpenses() {
-      try {
-        const data = await getExpenses();
-
-        console.log("Expenses received from API:", data);
-
-        setExpenses(data);
-      } catch (error) {
-        console.error("Failed to load expenses:", error);
-      }
-    }
 
     loadExpenses();
   }, []);
+
+  async function loadExpenses() {
+  try {
+    const data = await getExpenses();
+    setExpenses(data);
+  } catch (error) {
+    console.error("Failed to load expenses:", error);
+  }
+}
 
   async function addExpense(expense) {
     try {
@@ -96,7 +94,8 @@ function useExpenses() {
     addExpense,
     deleteExpense,
     editExpense,
-    fetchExpenseSummary
+    fetchExpenseSummary    ,
+  loadExpenses
   };
 }
 
